@@ -1,6 +1,6 @@
 #include "Card.h"
-#include "Player.h"
-#include "Types.h"
+#include "../Players/Player.h"
+#include "../Players/Types.h"
 
 
 string describeEncounter(const Encounter *card){

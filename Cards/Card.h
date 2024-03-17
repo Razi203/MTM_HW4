@@ -8,7 +8,7 @@ using std::string;
 
 
 static const string GOBLIN = "Goblin";
-static const string GIANT = "GIANT";
+static const string GIANT = "Giant";
 static const string DRAGON = "Dragon";
 static const string GANG = "Gang";
 static const string SOLARECLIPSE = "SolarEclipse";
