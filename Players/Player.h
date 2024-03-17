@@ -5,17 +5,28 @@
 
 using std::string;
 
+class Job;
+class Personality;
+
+
 class Player {
 public:
 
     Player(const string name, const string job, const string personality);
-    Player(const Player& player) = default;
+    Player(const Player& player);
     ~Player();
 
-    void makeChoice();
     void setPersonality(const string personality);
     void setJob(const string job);
-    string getJob();
+
+    void setForce(const int force);
+    bool HPIsFull() const;
+    void payCoins(const int price);
+    void levelUp();
+    void buff(const int force);
+    void heal(const int addedHP);
+    void damage(const int damage);
+    bool isKnockedOut() const;
 
     /**
      * Gets the description of the player
@@ -61,6 +72,9 @@ public:
 
 
 
+    Personality *m_personality;
+    Job *m_job;
+
 private:
     string name;
     int level;
@@ -72,51 +86,9 @@ private:
     static const int STARTING_FORCE = 5;
     static const int STARTING_COINS = 10;
     static const int STARTING_LEVEL = 1;
-
-    Personality *m_personality;
-    Job *m_job;
 };
 
 
 
 
 
-class Job{
-public:
-    virtual string getJob() = 0;
-};
-
-
-class Warrior : public Job{
-public:
-    string getJob() override;
-};
-
-
-class Sorcerer : public Job{
-public:
-    string getJob() override;
-};
-
-
-
-
-class Personality{
-public:
-    virtual string getPersonality() = 0;
-    virtual int makeChoice() = 0; // Place Holder, Need to be changed!
-};
-
-
-class Responsible : public Personality{
-public:
-    string getPersonality() override;
-    int makeChoice() override;
-};
-
-
-class RiskTaking : public Personality{
-public:
-    string getPersonality() override;
-    int makeChoice() override;
-};
