@@ -48,4 +48,53 @@ public:
      * @return - coins of the player
     */
     int getCoins() const;
+
+
+
+private:
+    string name;
+    int level;
+    int force;
+    int HP;
+    int coins;
+    static const int MAX_LEVEL = 10;
+    static const int MAX_HP = 100;
+    static const int STARTING_FORCE = 5;
+    static const int STARTING_COINS = 10;
+    static const int STARTING_LEVEL = 1;
+
+};
+
+
+class Warrior : public Player{
+public:
+    Warrior(string name);
+
+    
+};
+
+
+class Sorcerer : public Player{
+public:
+    Sorcerer(string name);
+};
+
+
+class Behavior{
+public:
+    virtual int makeChoice() = 0; // Place Holder, Need to be changed!
+
+
+};
+
+
+class Responsible : public Behavior{
+public:
+    int makeChoice() override;
+};
+
+
+class RiskTaker : public Behavior{
+public:
+    int makeChoice() override;
 };
