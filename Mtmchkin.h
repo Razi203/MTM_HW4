@@ -17,6 +17,11 @@ using std::queue;
 class Mtmchkin{
 private:
     int m_turnIndex;
+    vector<shared_ptr<Card>> cards;
+    vector<Player> players;
+    int alivePlayers;
+    bool game_is_over;
+    static const int MAX_LEVEL = 10;
 
     /**
      * Playes a single turn for a player

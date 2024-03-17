@@ -30,35 +30,39 @@ vector<Player> playerFiles(const string sourceFileName){
     }
     
     string line;
-    while (getline(source, line)) {
-        stringstream ss(line);
+    try {
+        while (getline(source, line)) {
+            stringstream ss(line);
 
-        string playerName;
-        ss >> playerName;
-        if(playerName.size() < SHORTEST_NAME || playerName.size() > LONGEST_NAME){
-            throw PlayerErrors();
+            string playerName;
+            ss >> playerName;
+            if(playerName.size() < SHORTEST_NAME || playerName.size() > LONGEST_NAME){
+                throw PlayerErrors();
+            }
+
+            string playerJob;
+            ss >> playerJob;
+            if((playerJob != "Sorcerer") && (playerJob != "Warrior")){
+                throw PlayerErrors();
+            }
+
+            string playerBehavior;
+            ss >> playerBehavior;
+            if((playerBehavior != "Responsible") && (playerBehavior != "RiskTaking")){
+                throw PlayerErrors();
+            }
+
+            Player player(playerName, playerJob, playerBehavior);
+            players.push_back(player);
         }
 
-        string playerJob;
-        ss >> playerJob;
-        if((playerJob != "Sorcerer") && (playerJob != "Warrior")){
+        if(players.size() > MAX_NUMBER_OF_PLAYER || players.size() < MIN_NUMBER_OF_PLAYER){
             throw PlayerErrors();
         }
-
-        string playerBehavior;
-        ss >> playerBehavior;
-        if((playerBehavior != "Responsible") && (playerBehavior != "RiskTaking")){
-            throw PlayerErrors();
-        }
-
-        Player player(playerName, playerJob, playerBehavior);
-        players.push_back(player);
     }
-
-    if(players.size() > MAX_NUMBER_OF_PLAYER || players.size() < MIN_NUMBER_OF_PLAYER){
+    catch (...) {
         throw PlayerErrors();
     }
-
     return players;
 }
 
@@ -66,8 +70,8 @@ vector<Player> playerFiles(const string sourceFileName){
 
 
 
-vector<unique_ptr<Card>> cardFiles(const string sourceFileName){
-    vector<unique_ptr<Card>> Cards;
+vector<shared_ptr<Card>> cardFiles(const string sourceFileName){
+    vector<shared_ptr<Card>> Cards;
 
     ifstream source(sourceFileName);
     if (!source) {
@@ -81,20 +85,20 @@ vector<unique_ptr<Card>> cardFiles(const string sourceFileName){
         ss >> cardName;
 
         if(cardName == GOBLIN){
-            Cards.push_back(unique_ptr<Goblin>(new Goblin()));
+            Cards.push_back(shared_ptr<Goblin>(new Goblin()));
         } 
         else if(cardName == DRAGON)
         {
-            Cards.push_back(unique_ptr<Dragon>(new Dragon()));
+            Cards.push_back(shared_ptr<Dragon>(new Dragon()));
         }
         else if(cardName == GIANT)
         {
-            Cards.push_back(unique_ptr<Giant>(new Giant()));
+            Cards.push_back(shared_ptr<Giant>(new Giant()));
         }
         else if (cardName == GANG)
         {
             
-            Cards.push_back(unique_ptr<Gang>(new Gang()));
+            Cards.push_back(shared_ptr<Gang>(new Gang()));
             string size;
             ss >> size;
             int gangSize;
@@ -110,7 +114,12 @@ vector<unique_ptr<Card>> cardFiles(const string sourceFileName){
             }
             for(int i = 0; i < gangSize; i++){
                 
-                ss >> cardName;
+                try{
+                    ss >> cardName;
+                }
+                catch (...){
+                    throw CardErrors();
+                }
                 if((cardName != GOBLIN) && (cardName != DRAGON) && (cardName != GANG) && (cardName != GIANT)){
                     throw CardErrors();
                 }
@@ -120,11 +129,11 @@ vector<unique_ptr<Card>> cardFiles(const string sourceFileName){
         }
         else if (cardName == SOLARECLIPSE)
         {
-            Cards.push_back(unique_ptr<SolarEclipse>(new SolarEclipse()));
+            Cards.push_back(shared_ptr<SolarEclipse>(new SolarEclipse()));
         }
         else if (cardName == POTIONSMERCHANT)
         {
-            Cards.push_back(unique_ptr<PotionsMerchant>(new PotionsMerchant()));
+            Cards.push_back(shared_ptr<PotionsMerchant>(new PotionsMerchant()));
         }
         else{
             throw CardErrors();

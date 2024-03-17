@@ -19,4 +19,4 @@ public:
 
 vector<Player> playerFiles(const string sourceFileName);
 
-vector<unique_ptr<Card>> cardFiles(const string sourceFileName);
+vector<shared_ptr<Card>> cardFiles(const string sourceFileName);
