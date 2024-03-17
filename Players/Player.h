@@ -7,6 +7,16 @@ using std::string;
 
 class Player {
 public:
+
+    Player(const string name, const string job, const string personality);
+    Player(const Player& player) = default;
+    ~Player();
+
+    void makeChoice();
+    void setPersonality(const string personality);
+    void setJob(const string job);
+    string getJob();
+
     /**
      * Gets the description of the player
      * 
@@ -63,38 +73,50 @@ private:
     static const int STARTING_COINS = 10;
     static const int STARTING_LEVEL = 1;
 
+    Personality *m_personality;
+    Job *m_job;
 };
 
 
-class Warrior : public Player{
-public:
-    Warrior(string name);
 
-    
+
+
+class Job{
+public:
+    virtual string getJob() = 0;
 };
 
 
-class Sorcerer : public Player{
+class Warrior : public Job{
 public:
-    Sorcerer(string name);
+    string getJob() override;
 };
 
 
-class Behavior{
+class Sorcerer : public Job{
 public:
+    string getJob() override;
+};
+
+
+
+
+class Personality{
+public:
+    virtual string getPersonality() = 0;
     virtual int makeChoice() = 0; // Place Holder, Need to be changed!
-
-
 };
 
 
-class Responsible : public Behavior{
+class Responsible : public Personality{
 public:
+    string getPersonality() override;
     int makeChoice() override;
 };
 
 
-class RiskTaker : public Behavior{
+class RiskTaking : public Personality{
 public:
+    string getPersonality() override;
     int makeChoice() override;
 };
