@@ -3,8 +3,8 @@
 
 
 int Job::solarBuff(Player& player){
-    int force =  (player.getForce() < 1) ? 0 : 1;
-    player.setForce(player.getForce() - force);
+    int force =  (player.getForce() < 1) ? 0 : -1;
+    player.setForce(player.getForce() + force);
     return force;
 }
 

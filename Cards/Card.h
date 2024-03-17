@@ -57,7 +57,7 @@ public:
 
 private:
     static const int Goblin_POWER = 5;
-    static const int Goblin_LOOT = 12;
+    static const int Goblin_LOOT = 2;
     static const int Goblin_DAMAGE = 10;
 
 };
