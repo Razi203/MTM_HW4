@@ -19,7 +19,7 @@ int main()
     }
 
 
-    vector<unique_ptr<Card>> cards = cardFiles(file2);
+    vector<shared_ptr<Card>> cards = cardFiles(file2);
     
     for (int i = 0; i < cards.size(); i++) {
         cout << "Description: " << cards.at(i)->getDescription() << endl;

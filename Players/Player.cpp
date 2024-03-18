@@ -2,51 +2,46 @@
 #include "Types.h"
 
 #include <string>
-
+#include <memory>
+using std::shared_ptr;
 using std::string;
 
 
 
 
 Player::Player(const string name, const string job, const string personality) : 
-        name(name), level(STARTING_LEVEL), force(STARTING_FORCE), HP(MAX_HP), coins(STARTING_COINS),
-        m_personality(NULL), m_job(NULL){
+        m_personality(NULL), m_job(NULL), name(name), level(STARTING_LEVEL), force(STARTING_FORCE), HP(MAX_HP),
+         coins(STARTING_COINS){
     setPersonality(personality);
     setJob(job);
 }
 
-Player::~Player(){
-    delete m_job;
-    delete m_personality;
-}
 
 Player::Player(const Player& player) : 
-        name(player.getName()), level(player.getLevel()), force(player.getForce()), HP(player.getHealthPoints()),
-        coins(player.getCoins()), m_personality(NULL), m_job(NULL){
+         m_personality(NULL), m_job(NULL), name(player.getName()), level(player.getLevel()),
+        force(player.getForce()), HP(player.getHealthPoints()), coins(player.getCoins()){
     setPersonality(player.m_personality->getPersonality());
     setJob(player.m_job->getJob());
 }
 
 void Player::setPersonality(const string personality){
-    Personality *new_personality;
+    shared_ptr<Personality> new_personality;
     if (personality == RESPONSIBLE){
-        new_personality = new Responsible();
+        new_personality = shared_ptr<Responsible>(new Responsible());
     } else if (personality == RISKTAKING){
-        new_personality = new RiskTaking();
+        new_personality = shared_ptr<RiskTaking>(new RiskTaking());
     }
-    delete this->m_personality;
     m_personality = new_personality;
 }
 
 
 void Player::setJob(const string job){
-    Job *new_job;
+    shared_ptr<Job> new_job;
     if (job == WARRIOR){
-        new_job = new Warrior();
+        new_job = shared_ptr<Warrior>(new Warrior());
     } else if (job == SORCERER){
-        new_job = new Sorcerer();
+        new_job = shared_ptr<Sorcerer>(new Sorcerer());
     }
-    delete this->m_job;
     m_job = new_job;
 }
 
@@ -79,7 +74,10 @@ int Player::getCoins() const{
     return coins;
 }
 
-
+void Player::earnCoins(const int coins){
+    if (coins < 0) return;
+    this->coins += coins;
+}
 
 void Player::setForce(const int force){
     this->force = force;

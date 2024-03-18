@@ -2,7 +2,8 @@
 #pragma once
 
 #include <string>
-
+#include <memory>
+using std::shared_ptr;
 using std::string;
 
 class Job;
@@ -14,7 +15,6 @@ public:
 
     Player(const string name, const string job, const string personality);
     Player(const Player& player);
-    ~Player();
 
     void setPersonality(const string personality);
     void setJob(const string job);
@@ -22,6 +22,7 @@ public:
     void setForce(const int force);
     bool HPIsFull() const;
     void payCoins(const int price);
+    void earnCoins(const int coins);
     void levelUp();
     void buff(const int force);
     void heal(const int addedHP);
@@ -72,8 +73,8 @@ public:
 
 
 
-    Personality *m_personality;
-    Job *m_job;
+    shared_ptr<Personality> m_personality;
+    shared_ptr<Job> m_job;
 
 private:
     string name;

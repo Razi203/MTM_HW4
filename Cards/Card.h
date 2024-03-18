@@ -4,6 +4,8 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+using std::shared_ptr;
 using std::string;
 
 
@@ -25,7 +27,7 @@ public:
     virtual string getDescription() const = 0;
     
     virtual void addMember(const string name);
-    virtual void playCard(Player& player) const;
+    virtual string playCard(Player& player) const;
 
 };
 
@@ -39,6 +41,7 @@ public:
     virtual int getDamage() const;
     string getDescription() const;
     Encounter(string name, int combatPower, int loot, int damage);
+    string playCard(Player& player) const override;
 
 protected:
     int combatPower;
@@ -54,7 +57,7 @@ public:
 
 private:
     static const int Goblin_POWER = 5;
-    static const int Goblin_LOOT = 12;
+    static const int Goblin_LOOT = 2;
     static const int Goblin_DAMAGE = 10;
 
 };
@@ -83,13 +86,12 @@ private:
 class Gang :public Encounter{
 public:
     Gang();
-    ~Gang();
 
     void addMember(const string name) override;
     string getName() const override;
 
 private:
-    std::vector<Encounter*> members;
+    std::vector<shared_ptr<Encounter>> members;
     int size;
     static const int EMPTY = 0;
 };
@@ -102,18 +104,18 @@ private:
 class Event: public Card{
 public:
     virtual string getDescription() const = 0;
-    virtual void playCard(Player& player) const = 0;
+    virtual string playCard(Player& player) const = 0;
 
 };
 
 class SolarEclipse: public Event{
 public:
     string getDescription() const override;
-    void playCard(Player& player) const override;
+    string playCard(Player& player) const override;
 };
 
 class PotionsMerchant: public Event{
 public:
     string getDescription() const override;
-    void playCard(Player& player) const override;
+    string playCard(Player& player) const override;
 };

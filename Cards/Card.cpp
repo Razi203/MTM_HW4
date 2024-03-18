@@ -1,7 +1,9 @@
 #include "Card.h"
+#include "utilities.h"
 #include "../Players/Player.h"
 #include "../Players/Types.h"
-
+#include <memory>
+using std::shared_ptr;
 
 string describeEncounter(const Encounter *card){
     string description = card->getName() + " (power " + std::to_string(card->getPower()) + ", loot "
@@ -13,12 +15,24 @@ void Card::addMember(const string name){
     return;
 }
 
-void Card::playCard(Player& player) const{
-    return;
+string Card::playCard(Player& player) const{
+    return "";
 }
 
 Encounter::Encounter(string name, int combatPower, int loot, int damage):
-        name(name), combatPower(combatPower), loot(loot), damage(damage){};
+        combatPower(combatPower), loot(loot), damage(damage), name(name){};
+
+string Encounter::playCard(Player& player) const{
+    if (player.m_job->getCombatPower(player) > combatPower){
+         player.levelUp();
+         player.earnCoins(loot);
+         return getEncounterWonMessage(player, loot);
+    } else {
+        player.damage(damage);
+        return getEncounterLostMessage(player, damage);
+    }
+}
+
 
 string Encounter::getName() const{
     return this->name;
@@ -53,20 +67,16 @@ Dragon::Dragon():
 Gang::Gang():
         Encounter(GANG, EMPTY, EMPTY, EMPTY), size(EMPTY){};
 
-Gang::~Gang(){
-    for(const Encounter* ptr : this->members){
-        delete ptr;
-    }
-}
+
 
 void Gang::addMember(const string name){
-    Encounter* new_member;
+    shared_ptr<Encounter> new_member;
     if (name == GOBLIN){
-        new_member = new Goblin();
+        new_member = shared_ptr<Goblin>(new Goblin());
     } else if (name == GIANT){
-        new_member = new Giant();
+        new_member = shared_ptr<Giant>(new Giant());
     } else if (name == DRAGON){
-        new_member = new Dragon();
+        new_member = shared_ptr<Dragon>(new Dragon());
     }
     this->members.push_back(new_member);
     this->loot += new_member->getLoot();
@@ -87,8 +97,9 @@ string SolarEclipse::getDescription() const{
     return SOLARECLIPSE;
 }
 
-void SolarEclipse::playCard(Player& player) const{
-    player.m_job->solarBuff(player);
+string SolarEclipse::playCard(Player& player) const{
+    int effect = player.m_job->solarBuff(player);
+    return getSolarEclipseMessage(player, effect);
 }
 
 
@@ -96,8 +107,9 @@ string PotionsMerchant::getDescription() const{
     return POTIONSMERCHANT;
 }
 
-void PotionsMerchant::playCard(Player& player) const{
-    player.m_personality->buyPotions(player);
+string PotionsMerchant::playCard(Player& player) const{
+    int amount = player.m_personality->buyPotions(player);
+    return getPotionsPurchaseMessage(player, amount);
 }
 
 

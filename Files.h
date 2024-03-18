@@ -14,9 +14,9 @@ public:
 
 class CardErrors : public runtime_error {
 public:
-    CardErrors() : runtime_error("Invalid Card File") {}
+    CardErrors() : runtime_error("Invalid Cards File") {}
 };
 
 vector<Player> playerFiles(const string sourceFileName);
 
-vector<unique_ptr<Card>> cardFiles(const string sourceFileName);
+vector<shared_ptr<Card>> cardFiles(const string sourceFileName);
