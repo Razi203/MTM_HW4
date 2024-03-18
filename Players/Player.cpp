@@ -131,3 +131,26 @@ void Player::heal(int addedHP){
 
 
 
+int Player::getCombatPower(){
+    return this->m_job->getCombatPower(*this);
+}
+
+
+int Player::solarBuff(){
+    return this->m_job->solarBuff(*this);
+}
+
+
+int Player::buyPotions(){
+    return this->m_personality->buyPotions(*this);
+}
+
+
+string Player::getPersonality(){
+    return this->m_personality->getPersonality();
+}
+
+
+string Player::getJob(){
+    return this->m_job->getJob();
+}

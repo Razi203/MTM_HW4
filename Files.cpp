@@ -18,9 +18,7 @@ static const int SHORTEST_NAME = 3;
 static const int LONGEST_NAME = 15;
 static const int MIN_NUMBER_OF_MONSTERS = 2;
 
-
-
-
+void GangAdder(shared_ptr<Card> gang, stringstream& ss);
 
 vector<Player> playerFiles(const string sourceFileName){
     vector<Player> players;
@@ -68,8 +66,6 @@ vector<Player> playerFiles(const string sourceFileName){
 
 
 
-
-
 vector<shared_ptr<Card>> cardFiles(const string sourceFileName){
     vector<shared_ptr<Card>> Cards;
 
@@ -97,35 +93,9 @@ vector<shared_ptr<Card>> cardFiles(const string sourceFileName){
         }
         else if (cardName == GANG)
         {
-            
-            Cards.push_back(shared_ptr<Gang>(new Gang()));
-            string size;
-            ss >> size;
-            int gangSize;
-            try {
-                 gangSize = stoi(size);
-            } 
-            catch (...) {
-                throw CardErrors();
-            }
-
-            if(gangSize < MIN_NUMBER_OF_MONSTERS){
-                throw CardErrors();
-            }
-            for(int i = 0; i < gangSize; i++){
-                
-                try{
-                    ss >> cardName;
-                }
-                catch (...){
-                    throw CardErrors();
-                }
-                if((cardName != GOBLIN) && (cardName != DRAGON) && (cardName != GANG) && (cardName != GIANT)){
-                    throw CardErrors();
-                }
-                Cards.back()->addMember(cardName);
-                
-            }
+            shared_ptr<Gang> new_member = shared_ptr<Gang>(new Gang());
+            Cards.push_back(new_member);
+            GangAdder(new_member, ss);
         }
         else if (cardName == SOLARECLIPSE)
         {
@@ -149,3 +119,41 @@ vector<shared_ptr<Card>> cardFiles(const string sourceFileName){
     return Cards;
 }
 
+
+
+void GangAdder(shared_ptr<Card> gang, stringstream& ss){  
+    string size;
+    int gangSize;
+    string cardName;
+
+    
+    ss >> size;
+    try {
+        gangSize = stoi(size);
+    } 
+    catch (...) {
+        throw CardErrors();
+    }
+
+    if(gangSize < MIN_NUMBER_OF_MONSTERS){
+        throw CardErrors();
+    }
+
+    for(int i = 0; i < gangSize; i++){
+        try{
+            ss >> cardName;
+        }
+        catch (...){
+            throw CardErrors();
+        }
+
+        if((cardName != GOBLIN) && (cardName != DRAGON) && (cardName != GANG) && (cardName != GIANT)){
+            throw CardErrors();
+        }
+
+        shared_ptr<Card> new_member = gang->addMember(cardName);
+        if (cardName == GANG){
+            GangAdder(new_member, ss);
+        } 
+    }
+}

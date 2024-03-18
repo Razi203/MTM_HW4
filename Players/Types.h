@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <string>
@@ -7,12 +6,20 @@ class Player;
 
 static const string RESPONSIBLE = "Responsible";
 static const string RISKTAKING = "RiskTaking";
+
 static const string WARRIOR = "Warrior";
 static const string SORCERER = "Sorcerer";
+
 static const int POTION_PRICE = 5;
 static const int POTION_HEALTH = 10;
 
 
+/**
+ * A parent abstract class to describe player's jobs.
+ * -    getJob          -   Returns the name of the job.
+ * -    solarBuff       -   Applies a solar buff effect on the player.
+ * -    getCombatPower  -   Returns the combat power of the player.
+*/
 class Job{
 public:
     virtual string getJob() const = 0;
@@ -21,6 +28,9 @@ public:
 };
 
 
+/**
+ * Warrior job has a unique combat power calculation.
+*/
 class Warrior : public Job{
 public:
     string getJob() const override;
@@ -28,6 +38,9 @@ public:
 };
 
 
+/**
+ * Sorcerer is affected positively bu the solarBuff
+*/
 class Sorcerer : public Job{
 public:
     string getJob() const override;
@@ -36,7 +49,11 @@ public:
 
 
 
-
+/**
+ * An Abstract parent class to host all the personalities.
+ * -    getPersonality  -   Returns the name of the personality.
+ * -    buyPotions      -   Buys health potions and returns the amount bought.
+*/
 class Personality{
 public:
     virtual string getPersonality() = 0;
@@ -44,6 +61,9 @@ public:
 };
 
 
+/**
+ * Responsible personality buys as much as possible HP potions.
+*/
 class Responsible : public Personality{
 public:
     string getPersonality() override;
@@ -51,13 +71,19 @@ public:
 };
 
 
+/**
+ * RiskTaking personality buys HP potions only if in need and only buys one at a time.
+*/
 class RiskTaking : public Personality{
 public:
+
+    string getPersonality() override;
+    int buyPotions(Player& player) override;
+
+private:
     static const int HP_THRESHHOLD = 50;
     static const int BOUGHT = 1;
     static const int DID_NOT_BUY = 0;
-    string getPersonality() override;
-    int buyPotions(Player& player) override;
 };
 
 
