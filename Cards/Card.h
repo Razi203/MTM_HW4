@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+
 using std::shared_ptr;
 using std::string;
 
@@ -17,6 +18,13 @@ static const string SOLARECLIPSE = "SolarEclipse";
 static const string POTIONSMERCHANT = "PotionsMerchant";
 
 
+/**
+ * Parent abstract Class that all card types inherit from.
+ * Cards are split to two groups: Event, Encounter.
+ * Common functions that exist to all cards:
+ * -    getDescription -  Returns a string with descriptoin of the card.
+ * -    playCard -  Plays  the card on the given player that used the card.    
+*/
 class Card{
 public:
     /**
@@ -26,12 +34,31 @@ public:
     */
     virtual string getDescription() const = 0;
     
-    virtual void addMember(const string name);
+    /**
+     * Adds a member to the gang card
+     * @param name - The card name to add to the gang.
+    */
+    virtual shared_ptr<Card> addMember(const string name);
+
+    /**
+     * Plays the card on the given player.
+     * @param player - The player that played card.
+    */
     virtual string playCard(Player& player) const;
 
 };
 
 
+/**
+ * Parent class for all Encounter type cards.
+ * Common functions for all encounter type cards:
+ * -    getName    -   Returns the name of the card.
+ * -    getPower    -   Returns the combat power of the card.
+ * -    getLoot     -   Returns the loot amount of the card.
+ * -    getDamage   -   Returns the damage of the card.
+ * -    getDescription  -   Returns a string with the description of the card and its details.
+ * Each Encounter Card is defined by a name, combat power, loot and damage.
+*/
 class Encounter : public Card{
 public:
 
@@ -51,6 +78,10 @@ protected:
 };
 
 
+/**
+ * Goblin is an Encouter type Card.
+ * It's paramaeters are constant and can't be modified.
+*/
 class Goblin :public Encounter{
 public:
     Goblin();
@@ -62,6 +93,11 @@ private:
 
 };
 
+
+/**
+ * Giant is an Encouter type Card.
+ * It's paramaeters are constant and can't be modified.
+*/
 class Giant :public Encounter {
 public:
     Giant();
@@ -72,6 +108,11 @@ private:
     static const int GIANT_DAMAGE = 25;
 };
 
+
+/**
+ * Dragon is an Encouter type Card.
+ * It's paramaeters are constant and can't be modified.
+*/
 class Dragon :public Encounter {
 public:
     Dragon();
@@ -83,24 +124,49 @@ private:
 
 };
 
+
+/**
+ * Gang is an Encouter type Card.
+ * It is unique by that it doesn't have any default values, instead it contains a group of other
+ * Encouter type cards. 
+ * C'tor returns an empty Gang.
+ * -    addMember   -   adds an encouter card by name to the gang and adds its corresponding values to the
+ *                      gang total values.
+ * -    getName     -   returns a string with the gang member count.
+*/
 class Gang :public Encounter{
 public:
     Gang();
 
-    void addMember(const string name) override;
+    /**
+     * Adds a member to the gang that called the function.
+     * @param name -    The name of the encounter type that should be added
+    */
+    shared_ptr<Card> addMember(const string name) override;
     string getName() const override;
+
+    /**
+     * The getters return the sum of the stats of all of the members.
+    */
+    int getPower() const override;
+    int getLoot() const override;
+    int getDamage() const override;
 
 private:
     std::vector<shared_ptr<Encounter>> members;
-    int size;
-    static const int EMPTY = 0;
+    static const int NO_DATA = 0;
 };
 
 
 
 
 
-
+/**
+ * Event type Cards are used to describe events that affect the player.
+ * The Event class is a parent abstract class with two functions to use:
+ * -    getDescription  -   Returns a string containing a description of the event.
+ * -    playCard        -   Plays the effect of the card on the player accordingly.
+*/
 class Event: public Card{
 public:
     virtual string getDescription() const = 0;
@@ -108,12 +174,25 @@ public:
 
 };
 
+
+/**
+ * The Solar Eclipse modifies players force according to their jobs.
+ * -    getDescription  -   Returns a string containing a description of the event.
+ * -    playCard        -   Plays the effect of the card on the player accordingly.
+*/
 class SolarEclipse: public Event{
 public:
     string getDescription() const override;
     string playCard(Player& player) const override;
 };
 
+
+/**
+ * The potions Merchant sells health potions that heal the player for a price.
+ * Each player buys from the merchant according to their personality.
+ * -    getDescription  -   Returns a string containing a description of the event.
+ * -    playCard        -   Plays the effect of the card on the player accordingly.
+*/
 class PotionsMerchant: public Event{
 public:
     string getDescription() const override;

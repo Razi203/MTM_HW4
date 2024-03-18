@@ -14,6 +14,8 @@ int Job::getCombatPower(Player& player){
 }
 
 
+
+
 int Sorcerer::solarBuff(Player& player){
     player.setForce(player.getForce() + 1);
     return 1;
@@ -22,6 +24,8 @@ int Sorcerer::solarBuff(Player& player){
 int Warrior::getCombatPower(Player& player){
     return player.getForce() * 2 + player.getLevel();
 }
+
+
 
 string Warrior::getJob() const{
     return WARRIOR;
@@ -34,9 +38,11 @@ string Sorcerer::getJob() const{
 
 
 
+
 int Personality::buyPotions(Player& player){
     return 0;
 }
+
 
 int Responsible::buyPotions(Player& player){
     int counter = 0;
@@ -56,10 +62,6 @@ int RiskTaking::buyPotions(Player& player){
     }
     return DID_NOT_BUY;
 }
-
-
-
-
 
 
 

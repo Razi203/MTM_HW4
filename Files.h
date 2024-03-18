@@ -6,6 +6,10 @@ using namespace std;
 #include "./Players/Player.h"
 #include "./Cards/Card.h"
 
+/**
+ * Handles Reading a file for the players or Cards.
+ * Returns an error if one occurs respectivly.
+*/
 
 class PlayerErrors : public runtime_error {
 public:
@@ -17,6 +21,18 @@ public:
     CardErrors() : runtime_error("Invalid Cards File") {}
 };
 
+
+/**
+ * Reads a file containing player names and returns a vector of the players.
+ * @param sourceFileName    -   The file to read.
+ * @return  -   The vector containing all players in the file.
+*/
 vector<Player> playerFiles(const string sourceFileName);
 
+
+/**
+ * Reads a file containing a deck of cards and returns a vector of pointers for the cards.
+ * @param sourceFileName    -   The file to read.
+ * @return  -   The vector containing pointers to the deck's cards.
+*/
 vector<shared_ptr<Card>> cardFiles(const string sourceFileName);
