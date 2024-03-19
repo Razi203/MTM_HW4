@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <memory>
+#include <cctype>
 
 #include "Player.h"
 #include "Card.h"
@@ -19,6 +20,8 @@ static const int LONGEST_NAME = 15;
 static const int MIN_NUMBER_OF_MONSTERS = 2;
 
 void GangAdder(shared_ptr<Card> gang, stringstream& ss);
+bool validName(string name);
+
 
 vector<Player> playerFiles(const string sourceFileName){
     vector<Player> players;
@@ -34,7 +37,7 @@ vector<Player> playerFiles(const string sourceFileName){
 
             string playerName;
             ss >> playerName;
-            if(playerName.size() < SHORTEST_NAME || playerName.size() > LONGEST_NAME){
+            if(!validName(playerName)){
                 throw PlayerErrors();
             }
 
@@ -52,6 +55,8 @@ vector<Player> playerFiles(const string sourceFileName){
 
             Player player(playerName, playerJob, playerBehavior);
             players.push_back(player);
+
+            if (ss >> playerName) throw PlayerErrors();
         }
 
         if(players.size() > MAX_NUMBER_OF_PLAYER || players.size() < MIN_NUMBER_OF_PLAYER){
@@ -109,7 +114,7 @@ vector<shared_ptr<Card>> cardFiles(const string sourceFileName){
             throw CardErrors();
         }
         
-    
+        if (ss >> cardName) throw CardErrors();
     }
 
     if(Cards.size() < MIN_NUMBER_OF_CARDS){
@@ -156,4 +161,17 @@ void GangAdder(shared_ptr<Card> gang, stringstream& ss){
             GangAdder(new_member, ss);
         } 
     }
+}
+
+
+bool validName(string name){
+    if (name.size() < SHORTEST_NAME || name.size() > LONGEST_NAME){
+        return false;
+    }
+    for (char ch : name) {
+        if (!isalpha(ch)) {
+            return false;
+        }
+    }
+    return true;
 }
