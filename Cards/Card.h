@@ -46,6 +46,8 @@ public:
     */
     virtual string playCard(Player& player) const;
 
+    virtual ~Card() = default;
+
 };
 
 
@@ -61,13 +63,14 @@ public:
 */
 class Encounter : public Card{
 public:
+    Encounter(string name, int combatPower, int loot, int damage);
+    virtual ~Encounter() = default;
 
     virtual string getName() const;
     virtual int getPower() const;
     virtual int getLoot() const;
     virtual int getDamage() const;
     string getDescription() const;
-    Encounter(string name, int combatPower, int loot, int damage);
     string playCard(Player& player) const override;
 
 protected:
@@ -85,6 +88,7 @@ protected:
 class Goblin :public Encounter{
 public:
     Goblin();
+    ~Goblin() override = default;
 
 private:
     static const int Goblin_POWER = 5;
@@ -101,6 +105,7 @@ private:
 class Giant :public Encounter {
 public:
     Giant();
+    ~Giant() override = default;
 
 private:
     static const int GIANT_POWER = 12;
@@ -116,6 +121,7 @@ private:
 class Dragon :public Encounter {
 public:
     Dragon();
+    ~Dragon() override = default;
 
 private:
     static const int DRAGON_POWER = 17;
@@ -137,6 +143,7 @@ private:
 class Gang :public Encounter{
 public:
     Gang();
+    ~Gang() override = default;
 
     /**
      * Adds a member to the gang that called the function.
@@ -171,7 +178,7 @@ class Event: public Card{
 public:
     virtual string getDescription() const = 0;
     virtual string playCard(Player& player) const = 0;
-
+    virtual ~Event() = default;
 };
 
 
@@ -182,6 +189,10 @@ public:
 */
 class SolarEclipse: public Event{
 public:
+    SolarEclipse() = default;
+    ~SolarEclipse() override = default;
+
+
     string getDescription() const override;
     string playCard(Player& player) const override;
 };
@@ -195,6 +206,10 @@ public:
 */
 class PotionsMerchant: public Event{
 public:
+    PotionsMerchant() = default;
+    ~PotionsMerchant() override = default;
+
+
     string getDescription() const override;
     string playCard(Player& player) const override;
 };

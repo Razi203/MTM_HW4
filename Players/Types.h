@@ -22,6 +22,8 @@ static const int POTION_HEALTH = 10;
 */
 class Job{
 public:
+    virtual ~Job() = default;
+
     virtual string getJob() const = 0;
     virtual int solarBuff(Player& player);
     virtual int getCombatPower(Player& player);
@@ -33,6 +35,9 @@ public:
 */
 class Warrior : public Job{
 public:
+    Warrior() = default;
+    ~Warrior() override = default;
+
     string getJob() const override;
     int getCombatPower(Player& player) override;
 };
@@ -43,6 +48,10 @@ public:
 */
 class Sorcerer : public Job{
 public:
+    Sorcerer() = default;
+    ~Sorcerer() override = default;
+
+
     string getJob() const override;
     int solarBuff(Player& player) override;
 };
@@ -56,6 +65,7 @@ public:
 */
 class Personality{
 public:
+    virtual ~Personality() = default;
     virtual string getPersonality() = 0;
     virtual int buyPotions(Player& player);
 };
@@ -66,6 +76,9 @@ public:
 */
 class Responsible : public Personality{
 public:
+    Responsible() = default;
+    ~Responsible() override = default;
+
     string getPersonality() override;
     int buyPotions(Player& player) override;
 };
@@ -76,6 +89,8 @@ public:
 */
 class RiskTaking : public Personality{
 public:
+    RiskTaking() = default;
+    ~RiskTaking() override = default;
 
     string getPersonality() override;
     int buyPotions(Player& player) override;

@@ -47,6 +47,7 @@ public:
     */
     Player(const Player& player);
 
+    ~Player() = default;
 
     /**
      * Sets the player's personality to a given one.
