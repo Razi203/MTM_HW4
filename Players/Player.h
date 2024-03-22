@@ -2,7 +2,10 @@
 
 #include <string>
 #include <memory>
-using std::shared_ptr;
+
+#include "Types.h"
+
+using std::unique_ptr;
 using std::string;
 
 class Job;              // To enable use of the class.
@@ -48,6 +51,9 @@ public:
     Player(const Player& player);
 
     ~Player() = default;
+
+    Player& operator=(const Player& player);
+
 
     /**
      * Sets the player's personality to a given one.
@@ -185,19 +191,19 @@ public:
      * 
      * @return  -   The player's personality.
     */
-    string getPersonality();
+    string getPersonality() const;
 
     /**
      * Gets the player's job.
      * 
      * @return  -   The player's job.
     */
-    string getJob();
+    string getJob() const;
 
 
 private:
-    shared_ptr<Personality> m_personality;
-    shared_ptr<Job> m_job;
+    unique_ptr<Personality> m_personality;
+    unique_ptr<Job> m_job;
 
     string name;
     int level;

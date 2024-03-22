@@ -6,8 +6,8 @@
 #include <memory>
 #include <cctype>
 
-#include "Player.h"
-#include "Card.h"
+#include "./Players/Player.h"
+#include "./Cards/Card.h"
 #include "Files.h"
 
 using namespace std;
@@ -19,12 +19,11 @@ static const int SHORTEST_NAME = 3;
 static const int LONGEST_NAME = 15;
 static const int MIN_NUMBER_OF_MONSTERS = 2;
 
-void GangAdder(shared_ptr<Card> gang, stringstream& ss);
+void GangAdder(Gang &gang, ifstream &source);
 bool validName(string name);
 
 
-vector<Player> playerFiles(const string sourceFileName){
-    vector<Player> players;
+void playerFiles(vector<Player>& players, const string sourceFileName){
     ifstream source(sourceFileName);
     if (!source) {
         throw PlayerErrors();
@@ -66,100 +65,90 @@ vector<Player> playerFiles(const string sourceFileName){
     catch (...) {
         throw PlayerErrors();
     }
-    return players;
 }
 
 
 
-vector<shared_ptr<Card>> cardFiles(const string sourceFileName){
-    vector<shared_ptr<Card>> Cards;
+void cardFiles(vector<unique_ptr<Card>>& Cards, const string sourceFileName){
 
     ifstream source(sourceFileName);
     if (!source) {
         throw CardErrors();
     }
-    string line;
 
-    while (getline(source, line)) {
-        stringstream ss(line);
-        string cardName;
-        ss >> cardName;
+    string cardName;
 
-        if(cardName == GOBLIN){
-            Cards.push_back(shared_ptr<Goblin>(new Goblin()));
+    while (source >> cardName) {
+
+        if(cardName == GOBLIN)
+        {
+            Cards.push_back(unique_ptr<Goblin>(new Goblin()));
         } 
         else if(cardName == DRAGON)
         {
-            Cards.push_back(shared_ptr<Dragon>(new Dragon()));
+            Cards.push_back(unique_ptr<Dragon>(new Dragon()));
         }
         else if(cardName == GIANT)
         {
-            Cards.push_back(shared_ptr<Giant>(new Giant()));
+            Cards.push_back(unique_ptr<Giant>(new Giant()));
         }
         else if (cardName == GANG)
         {
-            shared_ptr<Gang> new_member = shared_ptr<Gang>(new Gang());
-            Cards.push_back(new_member);
-            GangAdder(new_member, ss);
+            unique_ptr<Gang> new_member = unique_ptr<Gang>(new Gang());
+            GangAdder(*new_member, source);
+            Cards.push_back(move(new_member));
         }
         else if (cardName == SOLARECLIPSE)
         {
-            Cards.push_back(shared_ptr<SolarEclipse>(new SolarEclipse()));
+            Cards.push_back(unique_ptr<SolarEclipse>(new SolarEclipse()));
         }
         else if (cardName == POTIONSMERCHANT)
         {
-            Cards.push_back(shared_ptr<PotionsMerchant>(new PotionsMerchant()));
+            Cards.push_back(unique_ptr<PotionsMerchant>(new PotionsMerchant()));
         }
         else{
             throw CardErrors();
         }
-        
-        if (ss >> cardName) throw CardErrors();
     }
 
     if(Cards.size() < MIN_NUMBER_OF_CARDS){
         throw CardErrors();
     }
-    
-    return Cards;
 }
 
 
 
-void GangAdder(shared_ptr<Card> gang, stringstream& ss){  
+void GangAdder(Gang &gang, ifstream &source){  
     string size;
     int gangSize;
     string cardName;
 
-    
-    ss >> size;
+    source >> size;
     try {
         gangSize = stoi(size);
     } 
     catch (...) {
         throw CardErrors();
     }
-
     if(gangSize < MIN_NUMBER_OF_MONSTERS){
         throw CardErrors();
     }
 
     for(int i = 0; i < gangSize; i++){
-        try{
-            ss >> cardName;
-        }
-        catch (...){
-            throw CardErrors();
-        }
+        if(!(source >> cardName)) throw CardErrors();
 
         if((cardName != GOBLIN) && (cardName != DRAGON) && (cardName != GANG) && (cardName != GIANT)){
             throw CardErrors();
         }
-
-        shared_ptr<Card> new_member = gang->addMember(cardName);
         if (cardName == GANG){
-            GangAdder(new_member, ss);
-        } 
+            unique_ptr<Gang> inner_gang = unique_ptr<Gang>(new Gang());
+            GangAdder(*inner_gang, source);
+            gang.pushMember(move(inner_gang));
+        }
+        else
+        {
+            gang.addMember(cardName);
+        }
     }
 }
 

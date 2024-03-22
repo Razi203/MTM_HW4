@@ -1,3 +1,4 @@
-Goblin 
-Gang 2 Gang 2 Giant Giant Goblin
-Giant
+Goblin    Gang 2 Gang 2 Giant Gang
+3
+Goblin Giant
+Dragon

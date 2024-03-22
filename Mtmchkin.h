@@ -17,7 +17,7 @@ using std::queue;
 class Mtmchkin{
 private:
     int m_turnIndex;
-    vector<shared_ptr<Card>> cards;
+    vector<unique_ptr<Card>> cards;
     vector<Player> players;
     int alivePlayers;
     bool game_is_over;

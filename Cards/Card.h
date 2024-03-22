@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-using std::shared_ptr;
+using std::unique_ptr;
 using std::string;
 
 
@@ -35,16 +35,10 @@ public:
     virtual string getDescription() const = 0;
     
     /**
-     * Adds a member to the gang card
-     * @param name - The card name to add to the gang.
-    */
-    virtual shared_ptr<Card> addMember(const string name);
-
-    /**
      * Plays the card on the given player.
      * @param player - The player that played card.
     */
-    virtual string playCard(Player& player) const;
+    virtual string playCard(Player& player) const = 0;
 
     virtual ~Card() = default;
 
@@ -149,7 +143,10 @@ public:
      * Adds a member to the gang that called the function.
      * @param name -    The name of the encounter type that should be added
     */
-    shared_ptr<Card> addMember(const string name) override;
+    void addMember(const string name);
+
+    void pushMember(unique_ptr<Gang> gang);
+
     string getName() const override;
 
     /**
@@ -160,7 +157,7 @@ public:
     int getDamage() const override;
 
 private:
-    std::vector<shared_ptr<Encounter>> members;
+    std::vector<unique_ptr<Encounter>> members;
     static const int NO_DATA = 0;
 };
 

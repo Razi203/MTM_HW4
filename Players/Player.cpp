@@ -3,14 +3,14 @@
 
 #include <string>
 #include <memory>
-using std::shared_ptr;
+using std::unique_ptr;
 using std::string;
 
 
 
 
 Player::Player(const string name, const string job, const string personality) : 
-        m_personality(NULL), m_job(NULL), name(name), level(STARTING_LEVEL), force(STARTING_FORCE), HP(MAX_HP),
+        m_personality(), m_job(), name(name), level(STARTING_LEVEL), force(STARTING_FORCE), HP(MAX_HP),
          coins(STARTING_COINS){
     setPersonality(personality);
     setJob(job);
@@ -18,31 +18,31 @@ Player::Player(const string name, const string job, const string personality) :
 
 
 Player::Player(const Player& player) : 
-         m_personality(NULL), m_job(NULL), name(player.getName()), level(player.getLevel()),
+         m_personality(), m_job(), name(player.getName()), level(player.getLevel()),
         force(player.getForce()), HP(player.getHealthPoints()), coins(player.getCoins()){
     setPersonality(player.m_personality->getPersonality());
     setJob(player.m_job->getJob());
 }
 
 void Player::setPersonality(const string personality){
-    shared_ptr<Personality> new_personality;
+    unique_ptr<Personality> new_personality;
     if (personality == RESPONSIBLE){
-        new_personality = shared_ptr<Responsible>(new Responsible());
+        new_personality = unique_ptr<Responsible>(new Responsible());
     } else if (personality == RISKTAKING){
-        new_personality = shared_ptr<RiskTaking>(new RiskTaking());
+        new_personality = unique_ptr<RiskTaking>(new RiskTaking());
     }
-    m_personality = new_personality;
+    m_personality = move(new_personality);
 }
 
 
 void Player::setJob(const string job){
-    shared_ptr<Job> new_job;
+    unique_ptr<Job> new_job;
     if (job == WARRIOR){
-        new_job = shared_ptr<Warrior>(new Warrior());
+        new_job = unique_ptr<Warrior>(new Warrior());
     } else if (job == SORCERER){
-        new_job = shared_ptr<Sorcerer>(new Sorcerer());
+        new_job = unique_ptr<Sorcerer>(new Sorcerer());
     }
-    m_job = new_job;
+    m_job = move(new_job);
 }
 
 
@@ -52,6 +52,19 @@ string Player::getDescription() const{
         + std::to_string(this->getForce()) + ")";
     
 }
+
+
+Player& Player::operator=(const Player& player){
+    name = player.getName();
+    level = player.getLevel();
+    force = player.getForce();
+    HP = player.getHealthPoints();
+    coins = player.getCoins();
+    setJob(player.getJob());
+    setPersonality(player.getPersonality());
+    return *this;
+}
+
 
 
 string Player::getName() const{
@@ -146,11 +159,11 @@ int Player::buyPotions(){
 }
 
 
-string Player::getPersonality(){
+string Player::getPersonality() const{
     return this->m_personality->getPersonality();
 }
 
 
-string Player::getJob(){
+string Player::getJob() const{
     return this->m_job->getJob();
 }

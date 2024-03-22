@@ -22,7 +22,7 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) {
     /*===== TODO: Open and read cards file =====*/
 
 
-    cards = cardFiles(deckPath);
+    cardFiles(cards, deckPath);
 
     /*==========================================*/
 
@@ -30,7 +30,8 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) {
     /*===== TODO: Open and Read players file =====*/
 
     
-    players = playerFiles(playersPath);
+    playerFiles(players, playersPath);
+    
     alivePlayers = players.size();
     game_is_over = false;
 
@@ -49,18 +50,16 @@ void Mtmchkin::playTurn(Player& player) {
      * 3. Play the card
      * 4. Print the turn outcome with "printTurnOutcome"
     */
-
-    shared_ptr<Card> currentCard = cards.front();
+    int cardIndex = (m_turnIndex - 1) % cards.size();
+    Card &currentCard = *cards.at(cardIndex);
     
-    printTurnDetails(m_turnIndex, player, *currentCard);
+    printTurnDetails(m_turnIndex, player, currentCard);
     
-    string outcome = currentCard->playCard(player);
+    string outcome = currentCard.playCard(player);
     printTurnOutcome(outcome);
 
     if (player.isKnockedOut()) alivePlayers--;
     if (player.getLevel() == MAX_LEVEL) game_is_over = true;
-    cards.push_back(currentCard);
-    cards.erase(cards.begin());
 
     m_turnIndex++;
 }

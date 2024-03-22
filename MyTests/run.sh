@@ -5,3 +5,5 @@ g++ --std=c++11 -o FilesTest -Wall -pedantic-errors -Werror -DNDEBUG MyTests/fil
 rm -f out.txt
 
 ./FilesTest "MyTests/deck.txt" "MyTests/players.txt" > out.txt
+
+# ./FilesTest  > out.txt

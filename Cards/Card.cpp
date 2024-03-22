@@ -4,26 +4,13 @@
 #include "../Players/Types.h"
 
 #include <memory>
-using std::shared_ptr;
+using std::unique_ptr;
 
 #include <iostream>
 using namespace std;
 
 
-/**
- * psuedo function to enable calling the addMember.
-*/
-shared_ptr<Card> Card::addMember(const string name){
-    return NULL;
-}
 
-
-/**
- * psuedo function to enable calling the playCard.
-*/
-string Card::playCard(Player& player) const{
-    return "";
-}
 
 /**
  * Initilizes the stats for Encounter type cards.
@@ -131,19 +118,21 @@ int Gang::getDamage() const{
  * and adds all of the cards values to the gang total values.
  * The function assumes correct use, @param name should be an exisiting Encouter type.
 */
-shared_ptr<Card> Gang::addMember(const string name){
-    shared_ptr<Encounter> new_member;
+void Gang::addMember(const string name){
+    unique_ptr<Encounter> new_member;
     if (name == GOBLIN){
-        new_member = shared_ptr<Goblin>(new Goblin());
+        new_member = unique_ptr<Goblin>(new Goblin());
     } else if (name == GIANT){
-        new_member = shared_ptr<Giant>(new Giant());
+        new_member = unique_ptr<Giant>(new Giant());
     } else if (name == DRAGON){
-        new_member = shared_ptr<Dragon>(new Dragon());
-    } else if (name == GANG){
-        new_member = shared_ptr<Gang>(new Gang());
+        new_member = unique_ptr<Dragon>(new Dragon());
     }
-    this->members.push_back(new_member);
-    return new_member;
+    this->members.push_back(move(new_member));
+}
+
+
+void Gang::pushMember(unique_ptr<Gang> gang){
+    this->members.push_back(move(gang));
 }
 
 
