@@ -77,23 +77,28 @@ void cardFiles(vector<unique_ptr<Card>>& Cards, const string sourceFileName){
     }
 
     string cardName;
+    bool no_ecnounter = true;
 
     while (source >> cardName) {
 
         if(cardName == GOBLIN)
-        {
+        {   
+            no_ecnounter = false;
             Cards.push_back(unique_ptr<Goblin>(new Goblin()));
         } 
         else if(cardName == DRAGON)
         {
+            no_ecnounter = false;
             Cards.push_back(unique_ptr<Dragon>(new Dragon()));
         }
         else if(cardName == GIANT)
         {
+            no_ecnounter = false;
             Cards.push_back(unique_ptr<Giant>(new Giant()));
         }
         else if (cardName == GANG)
         {
+            no_ecnounter = false;
             unique_ptr<Gang> new_member = unique_ptr<Gang>(new Gang());
             GangAdder(*new_member, source);
             Cards.push_back(move(new_member));
@@ -111,7 +116,7 @@ void cardFiles(vector<unique_ptr<Card>>& Cards, const string sourceFileName){
         }
     }
 
-    if(Cards.size() < MIN_NUMBER_OF_CARDS){
+    if(Cards.size() < MIN_NUMBER_OF_CARDS || no_ecnounter){
         throw CardErrors();
     }
 }

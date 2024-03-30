@@ -36,7 +36,7 @@ For the unit & custom Tests, use [run.sh](MyTests/run.sh) in the *MyTests* folde
 use: *./MyTests/run.sh*
 
 compile using:  
-        g++ --std=c++11 -o mtmchkin -Wall -pedantic-errors -Werror -DNDEBUG *.cpp Cards/*.cpp Players/*.cpp -I. -I./Players -I./Cards
+        g++ --std=c++11 -o mtmchkin -Wall -pedantic-errors -Werror -DNDEBUG *.cpp Cards/*.cpp Players/*.cpp -I. -I Players -I./Cards
 
 valgrind:   
 valgrind --leak-check=full ./mtmchkin deck.txt players.txt
@@ -46,3 +46,6 @@ Final Check:
 
 Zipped using:   
 zip hw4 Mtmchkin.cpp Mtmchkin.h Files.h Files.cpp dry.pdf Players/* Cards/*
+
+student tests:
+[link to github](https://github.com/DanielWongi/234124-ex4-mtmchkin-test2024A?tab=readme-ov-file)
